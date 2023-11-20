@@ -1,0 +1,44 @@
+version: '2'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - dlts-net
+
+  driver-1:
+    build:
+      context: .
+      dockerfile: driver/Dockerfile
+    environment:
+      SEED: 1
+      BROKER_IP: kafka-broker-1:9092
+    networks:
+      - dlts-net
+
+  driver-2:
+    build:
+      context: .
+      dockerfile: driver/Dockerfile
+    environment:
+      SEED: 2
+      BROKER_IP: kafka-broker-1:9092
+    networks:
+      - dlts-net
+
+  orchestrator-1:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+    environment:
+      BROKER_IP: kafka-broker-1:9092
+    ports: 
+      - "8001:8001"
+    networks:
+      - dlts-net
+
+networks:
+  dlts-net:
